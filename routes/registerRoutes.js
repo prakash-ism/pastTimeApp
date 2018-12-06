@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 module.exports = app => {
   app.post('/api/register', (req, res, next) => {
     const { email, userName, password } = req.body;
-    console.log('Object received is ', req.body);
 
     Users.findOne({ email })
       .exec()
@@ -17,19 +16,15 @@ module.exports = app => {
           return bcrypt
             .genSalt(10)
             .then(salt => {
-              console.log('salt is ', salt);
-              console.log('Password is ', password);
               return bcrypt.hash(password, salt);
             })
             .then(hash => {
-              console.log('hash is ', hash);
               const user = new Users({
                 email,
                 userName,
                 password: hash
               });
 
-              console.log('User in routes', user);
               //Check here after deleting if condition
               //if (user.email && user.userName && user.password) {
               return user.save();
